@@ -13,8 +13,15 @@ class Collections extends Component {
 
   constructor() {
     super();
-    this.expose('collections');
     this.flux.on(Events.COLLECTION_UPDATED, this.updateCollections);
+  }
+
+  onBeforeMount() {
+    this.state = {
+      ...this.state,
+      collections: this.selectCollections(this.flux.store.getState())
+    };
+    this.expose('collections');
   }
 
   updateCollections = (collection: Store.Indexed.Selectable<Store.Collection>) =>
@@ -24,7 +31,7 @@ class Collections extends Component {
     return collections.allIds.map((collection) => ({
       value: collection,
       label: this.props.labels[collection] || collection,
-      selected: collection === collections.selected
+      selected: collections.selected === collection
     }));
   }
 }
