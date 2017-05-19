@@ -1,6 +1,6 @@
 import { view, Component, Events, Store } from '@storefront/core';
 
-@view('gb-collections', require('./index.html'), require('./index.css'), [
+@view('gb-collections', require('./index.html'), [
   { name: 'labels', default: {} }
 ])
 class Collections extends Component {
