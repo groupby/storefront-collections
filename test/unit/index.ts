@@ -4,6 +4,6 @@ import suite from './_suite';
 
 suite('package', ({ expect }) => {
   it('should expose Collections', () => {
-    expect(pkg).to.eq(Collections);
+    expect(pkg.Collections).to.eq(Collections);
   });
 });

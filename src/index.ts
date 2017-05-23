@@ -1,3 +1,3 @@
 import Collections from './collections';
 
-export = Collections;
+export { Collections };
