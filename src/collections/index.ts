@@ -13,7 +13,7 @@ class Collections extends Component {
 
   constructor() {
     super();
-    this.flux.on(Events.COLLECTION_UPDATED, this.updateCollections);
+    this.flux.on(Events.COLLECTION_UPDATED, this.updateCollection);
   }
 
   onBeforeMount() {
@@ -24,8 +24,14 @@ class Collections extends Component {
     this.expose('collections');
   }
 
-  updateCollections = (collection: Store.Indexed.Selectable<Store.Collection>) =>
-    console.log('got a collection', collection)
+  updateCollection = ({ name, total }: Store.Collection) => {
+    const index = this.flux.store.getState()
+      .data.collections.allIds.indexOf(name);
+    const collections = this.state.collections.slice();
+
+    collections.splice(index, 1, { ...this.state.collections[index], total });
+    this.set({ collections });
+  }
 
   selectCollections({ data: { collections } }: Store.State) {
     return collections.allIds.map((collection) => ({

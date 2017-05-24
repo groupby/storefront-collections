@@ -13,7 +13,7 @@ suite('Collections', ({ expect, spy }) => {
 
       const collections = new Collections();
 
-      expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollections)).to.be.true;
+      expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollection)).to.be.true;
     });
 
     describe('state', () => {
@@ -55,6 +55,19 @@ suite('Collections', ({ expect, spy }) => {
         collections.onBeforeMount();
 
         expect(expose.calledWith('collections')).to.be.true;
+      });
+    });
+
+    describe('updateCollection()', () => {
+      it('should update collection total', () => {
+        const allIds = ['a', 'b', 'c'];
+        const set = collections.set = spy();
+        collections.flux = <any>{ store: { getState: () => ({ data: { collections: { allIds } } }) } };
+        collections.state = <any>{ collections: [{ d: 'e' }, { f: 'g' }, { h: 'i' }] };
+
+        collections.updateCollection({ name: 'b', total: 50 });
+
+        expect(set.calledWith({ collections: [{ d: 'e' }, { f: 'g', total: 50 }, { h: 'i' }] })).to.be.true;
       });
     });
 
