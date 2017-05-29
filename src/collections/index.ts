@@ -14,6 +14,7 @@ class Collections extends Component {
   constructor() {
     super();
     this.flux.on(Events.COLLECTION_UPDATED, this.updateCollection);
+    this.services.collections.register(this);
   }
 
   onBeforeMount() {
