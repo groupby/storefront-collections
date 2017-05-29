@@ -5,15 +5,29 @@ import suite from './_suite';
 suite('Collections', ({ expect, spy }) => {
 
   describe('constructor()', () => {
-    afterEach(() => delete Component.prototype.flux);
+    afterEach(() => {
+      delete Component.prototype.flux;
+      delete Component.prototype.services;
+    });
 
     it('should register for COLLECTION_UPDATED event', () => {
       const on = spy();
-      const flux = Component.prototype.flux = <any>{ on };
+      Component.prototype.flux = <any>{ on };
+      Component.prototype.services = <any>{ collections: { register: () => null } };
 
       const collections = new Collections();
 
       expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollection)).to.be.true;
+    });
+
+    it('should register with collections service', () => {
+      const register = spy();
+      Component.prototype.flux = <any>{ on: () => null };
+      Component.prototype.services = <any>{ collections: { register } };
+
+      const collections = new Collections();
+
+      expect(register.calledWith(collections)).to.be.true;
     });
 
     describe('state', () => {
@@ -28,9 +42,13 @@ suite('Collections', ({ expect, spy }) => {
 
     beforeEach(() => {
       Component.prototype.flux = <any>{ on: () => null };
+      Component.prototype.services = <any>{ collections: { register: () => null } };
       collections = new Collections();
     });
-    afterEach(() => delete Component.prototype.flux);
+    afterEach(() => {
+      delete Component.prototype.flux;
+      delete Component.prototype.services;
+    });
 
     describe('onBeforeMount()', () => {
       it('should update state', () => {
