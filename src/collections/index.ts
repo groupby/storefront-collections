@@ -1,18 +1,16 @@
-import { view, Component, Events, Store } from '@storefront/core';
+import { tag, Events, Store, Tag } from '@storefront/core';
 
-@view('gb-collections', require('./index.html'), [
+@tag('gb-collections', require('./index.html'), [
   { name: 'labels', default: {} }
 ])
-class Collections extends Component {
+class Collections {
 
-  props: Collections.Props;
   state: Collections.State = {
     collections: [],
     onSelect: (index) => this.flux.switchCollection(this.state.collections[index].value)
   };
 
-  constructor() {
-    super();
+  init() {
     this.flux.on(Events.COLLECTION_UPDATED, this.updateCollection);
     this.services.collections.register(this);
   }
@@ -43,13 +41,21 @@ class Collections extends Component {
   }
 }
 
+interface Collections extends Tag<Collections.Props, Collections.State> { }
 namespace Collections {
   export interface Props {
     labels: { [collection: string]: string };
   }
+
   export interface State {
-    collections: Array<{ value: string, label: string, selected?: boolean }>;
+    collections: Option[];
     onSelect(index: number): void;
+  }
+
+  export interface Option {
+    value: string;
+    label: string;
+    selected?: boolean;
   }
 }
 
