@@ -23,7 +23,7 @@ suite('Collections', ({ expect, spy }) => {
 
       collections.init();
 
-      expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollection)).to.be.true;
+      expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollectionTotal)).to.be.true;
     });
 
     it('should register with collections service', () => {
@@ -70,7 +70,7 @@ suite('Collections', ({ expect, spy }) => {
       collections.flux = <any>{ store: { getState: () => ({ data: { collections: { allIds } } }) } };
       collections.state = <any>{ collections: [{ d: 'e' }, { f: 'g' }, { h: 'i' }] };
 
-      collections.updateCollection({ name: 'b', total: 50 });
+      collections.updateCollectionTotal({ name: 'b', total: 50 });
 
       expect(set.calledWith({ collections: [{ d: 'e' }, { f: 'g', total: 50 }, { h: 'i' }] })).to.be.true;
     });

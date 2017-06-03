@@ -1,29 +1,28 @@
-import { tag, Events, Store, Tag } from '@storefront/core';
+import { alias, tag, Events, Store, Tag } from '@storefront/core';
 
-@tag('gb-collections', require('./index.html'), [
-  { name: 'labels', default: {} }
-])
+@alias('collections')
+@tag('gb-collections', require('./index.html'))
 class Collections {
 
+  props: Collections.Props = {
+    labels: {}
+  };
   state: Collections.State = {
     collections: [],
     onSelect: (index) => this.flux.switchCollection(this.state.collections[index].value)
   };
 
   init() {
-    this.flux.on(Events.COLLECTION_UPDATED, this.updateCollection);
+    this.updateCollections();
+    this.flux.on(Events.COLLECTION_UPDATED, this.updateCollectionTotal);
+    this.flux.on(Events.SELECTED_COLLECTION_UPDATED, this.updateCollections);
     this.services.collections.register(this);
   }
 
-  onBeforeMount() {
-    this.state = {
-      ...this.state,
-      collections: this.selectCollections(this.flux.store.getState())
-    };
-    this.expose('collections');
-  }
+  updateCollections = () =>
+    this.set({ collections: this.selectCollections(this.flux.store.getState()) })
 
-  updateCollection = ({ name, total }: Store.Collection) => {
+  updateCollectionTotal = ({ name, total }: Store.Collection) => {
     const index = this.flux.store.getState()
       .data.collections.allIds.indexOf(name);
     const collections = this.state.collections.slice();
@@ -36,7 +35,8 @@ class Collections {
     return collections.allIds.map((collection) => ({
       value: collection,
       label: this.props.labels[collection] || collection,
-      selected: collections.selected === collection
+      selected: collections.selected === collection,
+      total: collections.byId[collection].total
     }));
   }
 }
