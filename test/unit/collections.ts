@@ -1,4 +1,4 @@
-import { Component, Events } from '@storefront/core';
+import { Events } from '@storefront/core';
 import Collections from '../../src/collections';
 import suite from './_suite';
 
