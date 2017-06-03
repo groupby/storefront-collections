@@ -16,9 +16,20 @@ suite('Collections', ({ expect, spy }) => {
   });
 
   describe('init()', () => {
+    it('should call updateCollections()', () => {
+      const updateCollections = collections.updateCollections = spy();
+      collections.flux = <any>{ on: () => null };
+      collections.services = <any>{ collections: { register: () => null } };
+
+      collections.init();
+
+      expect(updateCollections.called).to.be.true;
+    });
+
     it('should register for COLLECTION_UPDATED event', () => {
       const on = spy();
       collections.flux = <any>{ on };
+      collections.updateCollections = () => null;
       collections.services = <any>{ collections: { register: () => null } };
 
       collections.init();
@@ -26,40 +37,26 @@ suite('Collections', ({ expect, spy }) => {
       expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollectionTotal)).to.be.true;
     });
 
+    it('should register for SELECTED_COLLECTION_UPDATED event', () => {
+      const on = spy();
+      collections.flux = <any>{ on };
+      collections.updateCollections = () => null;
+      collections.services = <any>{ collections: { register: () => null } };
+
+      collections.init();
+
+      expect(on.calledWith(Events.SELECTED_COLLECTION_UPDATED, collections.updateCollections)).to.be.true;
+    });
+
     it('should register with collections service', () => {
       const register = spy();
       collections.flux = <any>{ on: () => null };
+      collections.updateCollections = () => null;
       collections.services = <any>{ collections: { register } };
 
       collections.init();
 
       expect(register.calledWith(collections)).to.be.true;
-    });
-  });
-
-  describe('onBeforeMount()', () => {
-    it('should update state', () => {
-      const state = { a: 'b' };
-      const collectionList = ['e', 'f'];
-      const selectCollections = collections.selectCollections = spy(() => collectionList);
-      collections.flux = <any>{ store: { getState: () => state } };
-      collections.expose = () => null;
-      collections.state = <any>{ c: 'd' };
-
-      collections.onBeforeMount();
-
-      expect(selectCollections.calledWith(state)).to.be.true;
-      expect(collections.state).to.eql({ c: 'd', collections: collectionList });
-    });
-
-    it('should call expose()', () => {
-      const expose = collections.expose = spy();
-      collections.selectCollections = spy();
-      collections.flux = <any>{ store: { getState: () => null } };
-
-      collections.onBeforeMount();
-
-      expect(expose.calledWith('collections')).to.be.true;
     });
   });
 
@@ -76,11 +73,11 @@ suite('Collections', ({ expect, spy }) => {
     });
   });
 
-  describe('selectCollection()', () => {
+  describe('selectCollections()', () => {
     it('should map to options', () => {
       const collectionState = {
         allIds: ['a', 'b', 'c'],
-        byIds: { a: {}, b: {}, c: {} },
+        byId: { a: {}, b: { total: 4 }, c: {} },
         selected: 'b'
       };
       collections.props = <any>{ labels: {} };
@@ -88,16 +85,16 @@ suite('Collections', ({ expect, spy }) => {
       const options = collections.selectCollections(<any>{ data: { collections: collectionState } });
 
       expect(options).to.eql([
-        { value: 'a', label: 'a', selected: false },
-        { value: 'b', label: 'b', selected: true },
-        { value: 'c', label: 'c', selected: false }
+        { value: 'a', label: 'a', selected: false, total: undefined },
+        { value: 'b', label: 'b', selected: true, total: 4 },
+        { value: 'c', label: 'c', selected: false, total: undefined }
       ]);
     });
 
     it('should allow overriding labels', () => {
       const collectionState = {
         allIds: ['a', 'b', 'c'],
-        byIds: { a: {}, b: {}, c: {} },
+        byId: { a: {}, b: {}, c: {} },
         selected: 'b'
       };
       collections.props = <any>{ labels: { a: 'A', b: 'B', c: 'C' } };
@@ -105,9 +102,9 @@ suite('Collections', ({ expect, spy }) => {
       const options = collections.selectCollections(<any>{ data: { collections: collectionState } });
 
       expect(options).to.eql([
-        { value: 'a', label: 'A', selected: false },
-        { value: 'b', label: 'B', selected: true },
-        { value: 'c', label: 'C', selected: false }
+        { value: 'a', label: 'A', selected: false, total: undefined },
+        { value: 'b', label: 'B', selected: true, total: undefined },
+        { value: 'c', label: 'C', selected: false, total: undefined }
       ]);
     });
   });
