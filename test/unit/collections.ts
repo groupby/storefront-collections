@@ -23,7 +23,7 @@ suite('Collections', ({ expect, spy }) => {
 
       collections.init();
 
-      expect(updateCollections.called).to.be.true;
+      expect(updateCollections).to.be.called;
     });
 
     it('should register for COLLECTION_UPDATED event', () => {
@@ -34,7 +34,7 @@ suite('Collections', ({ expect, spy }) => {
 
       collections.init();
 
-      expect(on.calledWith(Events.COLLECTION_UPDATED, collections.updateCollectionTotal)).to.be.true;
+      expect(on).to.be.calledWith(Events.COLLECTION_UPDATED, collections.updateCollectionTotal);
     });
 
     it('should register for SELECTED_COLLECTION_UPDATED event', () => {
@@ -45,7 +45,7 @@ suite('Collections', ({ expect, spy }) => {
 
       collections.init();
 
-      expect(on.calledWith(Events.SELECTED_COLLECTION_UPDATED, collections.updateCollections)).to.be.true;
+      expect(on).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED, collections.updateCollections);
     });
 
     it('should register with collections service', () => {
@@ -56,7 +56,7 @@ suite('Collections', ({ expect, spy }) => {
 
       collections.init();
 
-      expect(register.calledWith(collections)).to.be.true;
+      expect(register).to.be.calledWith(collections);
     });
   });
 
@@ -69,7 +69,7 @@ suite('Collections', ({ expect, spy }) => {
 
       collections.updateCollectionTotal({ name: 'b', total: 50 });
 
-      expect(set.calledWith({ collections: [{ d: 'e' }, { f: 'g', total: 50 }, { h: 'i' }] })).to.be.true;
+      expect(set).to.be.calledWith({ collections: [{ d: 'e' }, { f: 'g', total: 50 }, { h: 'i' }] });
     });
   });
 
