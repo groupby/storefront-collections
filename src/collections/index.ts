@@ -20,7 +20,9 @@ class Collections {
   }
 
   updateCollections = () =>
-    this.set({ collections: this.selectCollections(this.flux.store.getState()) })
+    this.set({
+      collections: this.selectCollections(this.flux.store.getState())
+    })
 
   updateCollectionTotal = ({ name, total }: Store.Collection) => {
     const index = this.flux.store.getState()

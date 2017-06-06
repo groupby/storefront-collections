@@ -8,9 +8,28 @@ suite('Collections', ({ expect, spy }) => {
   beforeEach(() => collections = new Collections());
 
   describe('constructor()', () => {
+    describe('props', () => {
+      it('should have initial value', () => {
+        expect(collections.props).to.eql({ labels: {} });
+      });
+    });
+
     describe('state', () => {
+      it('should have initial value', () => {
+        expect(collections.state.collections).to.eql([]);
+      });
+
       describe('onSelect()', () => {
-        it('should call flux.switchCollection()');
+        it('should call flux.switchCollection()', () => {
+          const collection = 'products';
+          const switchCollection = spy();
+          collections.state.collections = <any[]>[{ value: 'other' }, { value: collection }];
+          collections.flux = <any>{ switchCollection };
+
+          collections.state.onSelect(1);
+
+          expect(switchCollection).to.be.calledWith(collection);
+        });
       });
     });
   });
@@ -60,7 +79,22 @@ suite('Collections', ({ expect, spy }) => {
     });
   });
 
-  describe('updateCollection()', () => {
+  describe('updateCollections()', () => {
+    it('should set collections', () => {
+      const state = { a: 'b' };
+      const newCollections = ['c', 'd'];
+      const set = collections.set = spy();
+      const selectCollections = collections.selectCollections = spy(() => newCollections);
+      collections.flux = <any>{ store: { getState: () => state } };
+
+      collections.updateCollections();
+
+      expect(selectCollections).to.be.calledWith(state);
+      expect(set).to.be.calledWith({ collections: newCollections });
+    });
+  });
+
+  describe('updateCollectionTotal()', () => {
     it('should update collection total', () => {
       const allIds = ['a', 'b', 'c'];
       const set = collections.set = spy();
