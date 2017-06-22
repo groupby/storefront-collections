@@ -9,7 +9,7 @@ class Collections {
   };
   state: Collections.State = {
     collections: [],
-    onSelect: (index) => this.flux.switchCollection(this.state.collections[index].value)
+    onSelect: (index) => this.actions.selectCollection(this.state.collections[index].value)
   };
 
   init() {
