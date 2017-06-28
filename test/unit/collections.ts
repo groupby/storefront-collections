@@ -20,15 +20,15 @@ suite('Collections', ({ expect, spy }) => {
       });
 
       describe('onSelect()', () => {
-        it('should call flux.switchCollection()', () => {
+        it('should call actions.selectCollection()', () => {
           const collection = 'products';
-          const switchCollection = spy();
+          const selectCollection = spy();
           collections.state.collections = <any[]>[{ value: 'other' }, { value: collection }];
-          collections.flux = <any>{ switchCollection };
+          collections.actions = <any>{ selectCollection };
 
           collections.state.onSelect(1);
 
-          expect(switchCollection).to.be.calledWith(collection);
+          expect(selectCollection).to.be.calledWith(collection);
         });
       });
     });
