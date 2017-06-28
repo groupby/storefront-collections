@@ -1,5 +1,6 @@
-import { alias, origin, tag, Events, Store, Tag } from '@storefront/core';
+import { alias, configurable, origin, tag, Events, Store, Tag } from '@storefront/core';
 
+@configurable
 @alias('collections')
 @origin('collectionSwitcher')
 @tag('gb-collections', require('./index.html'))
