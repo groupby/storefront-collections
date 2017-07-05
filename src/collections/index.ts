@@ -1,4 +1,4 @@
-import { alias, configurable, origin, tag, Events, Store, Tag } from '@storefront/core';
+import { alias, configurable, origin, tag, Events, Selectors, Store, Tag } from '@storefront/core';
 
 @configurable
 @alias('collections')
@@ -23,19 +23,18 @@ class Collections {
 
   updateCollections = () =>
     this.set({
-      collections: this.selectCollections(this.flux.store.getState())
+      collections: this.selectCollections(Selectors.collections(this.flux.store.getState()))
     })
 
   updateCollectionTotal = ({ name, total }: Store.Collection) => {
-    const index = this.flux.store.getState()
-      .data.collections.allIds.indexOf(name);
+    const index = Selectors.collectionIndex(this.flux.store.getState(), name);
     const collections = this.state.collections.slice();
 
     collections.splice(index, 1, { ...this.state.collections[index], total });
     this.set({ collections });
   }
 
-  selectCollections({ data: { collections } }: Store.State) {
+  selectCollections(collections: Store.Indexed.Selectable<Store.Collection>) {
     return collections.allIds.map((collection) => ({
       value: collection,
       label: this.props.labels[collection] || collection,
