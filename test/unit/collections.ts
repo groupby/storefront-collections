@@ -1,4 +1,4 @@
-import { Events } from '@storefront/core';
+import { Events, Selectors } from '@storefront/core';
 import Collections from '../../src/collections';
 import suite from './_suite';
 
@@ -86,13 +86,16 @@ suite('Collections', ({ expect, spy, itShouldBeConfigurable, itShouldHaveAlias }
     it('should set collections', () => {
       const state = { a: 'b' };
       const newCollections = ['c', 'd'];
+      const rawCollections = ['e', 'f'];
       const set = collections.set = spy();
       const selectCollections = collections.selectCollections = spy(() => newCollections);
+      const collectionsSelector = stub(Selectors, 'collections').returns(rawCollections);
       collections.flux = <any>{ store: { getState: () => state } };
 
       collections.updateCollections();
 
-      expect(selectCollections).to.be.calledWith(state);
+      expect(selectCollections).to.be.calledWith(rawCollections);
+      expect(collectionsSelector).to.be.calledWith(state);
       expect(set).to.be.calledWith({ collections: newCollections });
     });
   });
@@ -101,25 +104,28 @@ suite('Collections', ({ expect, spy, itShouldBeConfigurable, itShouldHaveAlias }
     it('should update collection total', () => {
       const allIds = ['a', 'b', 'c'];
       const set = collections.set = spy();
-      collections.flux = <any>{ store: { getState: () => ({ data: { collections: { allIds } } }) } };
+      const state = { j: 'k' };
+      const collectionsSelector = stub(Selectors, 'collectionIndex').returns(1);
+      collections.flux = <any>{ store: { getState: () => state } };
       collections.state = <any>{ collections: [{ d: 'e' }, { f: 'g' }, { h: 'i' }] };
 
       collections.updateCollectionTotal({ name: 'b', total: 50 });
 
+      expect(collectionsSelector).to.be.calledWith(state);
       expect(set).to.be.calledWith({ collections: [{ d: 'e' }, { f: 'g', total: 50 }, { h: 'i' }] });
     });
   });
 
   describe('selectCollections()', () => {
     it('should map to options', () => {
-      const collectionState = {
+      const collectionState: any = {
         allIds: ['a', 'b', 'c'],
         byId: { a: {}, b: { total: 4 }, c: {} },
         selected: 'b'
       };
       collections.props = <any>{ labels: {} };
 
-      const options = collections.selectCollections(<any>{ data: { collections: collectionState } });
+      const options = collections.selectCollections(collectionState);
 
       expect(options).to.eql([
         { value: 'a', label: 'a', selected: false, total: undefined },
@@ -129,14 +135,14 @@ suite('Collections', ({ expect, spy, itShouldBeConfigurable, itShouldHaveAlias }
     });
 
     it('should allow overriding labels', () => {
-      const collectionState = {
+      const collectionState: any = {
         allIds: ['a', 'b', 'c'],
         byId: { a: {}, b: {}, c: {} },
         selected: 'b'
       };
       collections.props = <any>{ labels: { a: 'A', b: 'B', c: 'C' } };
 
-      const options = collections.selectCollections(<any>{ data: { collections: collectionState } });
+      const options = collections.selectCollections(collectionState);
 
       expect(options).to.eql([
         { value: 'a', label: 'A', selected: false, total: undefined },
