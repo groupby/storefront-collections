@@ -27,7 +27,7 @@ export default suite<Utils, any>((tests) => {
         });
       });
     },
-    itShouldHaveAlias: (clazz) => {
+    itShouldHaveAlias: (clazz, expectedValue) => {
       describe('alias', () => {
         it('should set alias', () => {
           // tslint:disable-next-line max-line-length
