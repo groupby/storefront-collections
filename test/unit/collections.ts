@@ -2,10 +2,13 @@ import { Events } from '@storefront/core';
 import Collections from '../../src/collections';
 import suite from './_suite';
 
-suite('Collections', ({ expect, spy }) => {
+suite('Collections', ({ expect, spy, itShouldBeConfigurable, itShouldHaveAlias }) => {
   let collections: Collections;
 
   beforeEach(() => collections = new Collections());
+
+  itShouldBeConfigurable(Collections);
+  itShouldHaveAlias(Collections, 'collections');
 
   describe('constructor()', () => {
     describe('props', () => {
