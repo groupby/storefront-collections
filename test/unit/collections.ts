@@ -2,7 +2,7 @@ import { Events, Selectors } from '@storefront/core';
 import Collections from '../../src/collections';
 import suite from './_suite';
 
-suite('Collections', ({ expect, spy, itShouldBeConfigurable, itShouldHaveAlias }) => {
+suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldHaveAlias }) => {
   let collections: Collections;
 
   beforeEach(() => collections = new Collections());
