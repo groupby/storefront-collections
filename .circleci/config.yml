@@ -1,5 +1,5 @@
 defaults: &cache
-  key: storefront-collections-{{ .Branch }}-{{ checksum "yarn.lock" }}
+  key: node_cache-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
 version: 2
 
@@ -51,6 +51,9 @@ jobs:
       - run:
           name: Documentation
           command: |
+            git config --global user.email "ops@groupbyinc.com"
+            git config --global user.name "GroupBy Ops"
+
             yarn docs
             git add docs
             git commit -m "docs: regenerate documentation" && git push || true
