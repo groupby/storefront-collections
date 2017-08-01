@@ -1,14 +1,16 @@
+defaults: &cache
+  key: storefront-collections-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
 version: 2
 
 jobs:
   build:
     working_directory: ~/storefront-collections
-    docker:
-      - image: kkarczmarczyk/node-yarn
+    docker: {image: kkarczmarczyk/node-yarn}
     steps:
       - checkout
       - restore_cache:
-          key: storefront-collections-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          <<: *cache
       - run:
           name: Dependencies
           command: yarn global add greenkeeper-lockfile@1
@@ -16,7 +18,7 @@ jobs:
           name: Install
           command: yarn
       - save_cache:
-          key: storefront-collections-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          <<: *cache
           paths:
             - ~/node_modules
       - run:
@@ -26,8 +28,46 @@ jobs:
           name: Test
           command: yarn start ci
       - run:
-          name: Release
-          command: yarn start release || true
-      - run:
           name: Upload Lockfile
           command: greenkeeper-lockfile-upload
+          when: on_fail
+  release:
+    working_directory: ~/storefront-collections
+    docker: {image: kkarczmarczyk/node-yarn}
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *cache
+      - run:
+          name: Release
+          command: 'yarn release || true'
+  documentation:
+    working_directory: ~/storefront-collections
+    docker: {image: kkarczmarczyk/node-yarn}
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *cache
+      - run:
+          name: Documentation
+          command: |
+            yarn docs
+            git add docs
+            git commit -m "docs: regenerate documentation" && git push || true
+
+workflows:
+  version: 2
+
+  build_test_release:
+    jobs:
+      - build
+      - release:
+          filters:
+            branches: {only: master}
+          requires:
+            - build
+      - documentation:
+          filters:
+            branches: {only: master}
+          requires:
+            - release

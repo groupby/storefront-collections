@@ -46,7 +46,7 @@ class Collections {
 
 interface Collections extends Tag<Collections.Props, Collections.State> { }
 namespace Collections {
-  export interface Props {
+  export interface Props extends Tag.Props {
     labels: { [collection: string]: string };
   }
 
@@ -59,6 +59,7 @@ namespace Collections {
     value: string;
     label: string;
     selected?: boolean;
+    total?: number;
   }
 }
 
