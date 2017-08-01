@@ -57,11 +57,10 @@ jobs:
 
             git remote rm origin
             git remote add origin "https://${GH_TOKEN}@github.com/groupby/storefront-collections.git"
-            git fetch
 
             yarn docs
             git add docs
-            git commit -m "docs: regenerate documentation" && git push || true
+            git commit -m "docs: regenerate documentation" && git push -u origin master || true
 
 workflows:
   version: 2
