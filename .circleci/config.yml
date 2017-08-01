@@ -76,18 +76,18 @@ jobs:
             fi
 
             yarn docs:json
-            DIFF=$(diff component.docs.json old-component.docs.json)
-            if [ "$DIFF" != "" ]; then
-              yarn docs
-              git add docs
-              git commit -m "docs: regenerate documentation" && git push -u origin master || true
-            else
-              echo "no change in generated documentation"
-            fi
-      - save_cache:
-          key: docs_cache
-          paths:
-            - ~/project/component.docs.json
+            diff component.docs.json old-component.docs.json
+            # if [ "$DIFF" != "" ]; then
+            #   yarn docs
+            #   git add docs
+            #   git commit -m "docs: regenerate documentation" && git push -u origin master || true
+            # else
+            #   echo "no change in generated documentation"
+            # fi
+      # - save_cache:
+      #     key: docs_cache
+      #     paths:
+      #       - ~/project/component.docs.json
 
 workflows:
   version: 2
