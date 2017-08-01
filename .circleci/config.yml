@@ -6,7 +6,8 @@ version: 2
 jobs:
   build:
     working_directory: ~/storefront-collections
-    docker: {image: kkarczmarczyk/node-yarn}
+    docker:
+      image: kkarczmarczyk/node-yarn
     steps:
       - checkout
       - restore_cache:
@@ -33,7 +34,8 @@ jobs:
           when: on_fail
   release:
     working_directory: ~/storefront-collections
-    docker: {image: kkarczmarczyk/node-yarn}
+    docker:
+      image: kkarczmarczyk/node-yarn
     steps:
       - checkout
       - restore_cache:
@@ -43,7 +45,8 @@ jobs:
           command: 'yarn release || true'
   documentation:
     working_directory: ~/storefront-collections
-    docker: {image: kkarczmarczyk/node-yarn}
+    docker:
+      image: kkarczmarczyk/node-yarn
     steps:
       - checkout
       - restore_cache:
@@ -63,11 +66,13 @@ workflows:
       - build
       - release:
           filters:
-            branches: {only: master}
+            branches:
+              only: master
           requires:
             - build
       - documentation:
           filters:
-            branches: {only: master}
+            branches:
+              only: master
           requires:
             - release
