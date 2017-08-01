@@ -49,7 +49,7 @@ jobs:
           <<: *cache
       - run:
           name: Release
-          command: 'yarn release || true'
+          command: 'yarn start release || true'
   documentation:
     docker:
       - image: kkarczmarczyk/node-yarn
@@ -87,7 +87,7 @@ jobs:
               echo "no change in generated documentation"
             fi
       - save_cache:
-          key: docs_cache
+          key: docs_cache-{{ checksum "component.docs.json" }}
           paths:
             - ~/project/component.docs.json
 
