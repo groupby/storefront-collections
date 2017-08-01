@@ -20,7 +20,7 @@ jobs:
       - save_cache:
           <<: *cache
           paths:
-            - ~/node_modules
+            - ~/project/node_modules
       - run:
           name: Update Lockfile
           command: greenkeeper-lockfile-update
