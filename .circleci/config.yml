@@ -5,7 +5,6 @@ version: 2
 
 jobs:
   build:
-    working_directory: ~/storefront-collections
     docker:
       - image: kkarczmarczyk/node-yarn
     steps:
@@ -33,7 +32,6 @@ jobs:
           command: greenkeeper-lockfile-upload
           when: on_fail
   release:
-    working_directory: ~/storefront-collections
     docker:
       - image: kkarczmarczyk/node-yarn
     steps:
@@ -44,7 +42,6 @@ jobs:
           name: Release
           command: 'yarn release || true'
   documentation:
-    working_directory: ~/storefront-collections
     docker:
       - image: kkarczmarczyk/node-yarn
     steps:
