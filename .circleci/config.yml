@@ -62,8 +62,6 @@ jobs:
       - run:
           name: Documentation
           command: |
-            apt-get install -y diffutils
-
             git config --global user.email "ops@groupbyinc.com"
             git config --global user.name "GroupBy Ops"
             git config --global push.default simple
@@ -83,6 +81,8 @@ jobs:
               yarn docs
               git add docs
               git commit -m "docs: regenerate documentation" && git push -u origin master || true
+            else
+              echo "no change in generated documentation"
             fi
       - save_cache:
           key: docs_cache
