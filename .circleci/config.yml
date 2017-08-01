@@ -48,6 +48,8 @@ jobs:
       - checkout
       - restore_cache:
           <<: *cache
+      - restore_cache:
+          key: docs_cache
       - run:
           name: Documentation
           command: |
@@ -56,11 +58,25 @@ jobs:
             git config --global push.default simple
 
             git remote rm origin
-            git remote add origin "https://${GH_TOKEN}@github.com/groupby/storefront-collections.git"
+            git remote add origin "https://${GH_TOKEN}@github.com/groupby/${CIRCLE_PROJECT_REPONAME}.git"
 
-            yarn docs
-            git add docs
-            git commit -m "docs: regenerate documentation" && git push -u origin master || true
+            if [ -e component.docs.json ]; then
+              mv component.docs.json old-component.docs.json
+            else
+              touch old-component.docs.json
+            fi
+
+            yarn docs:json
+            DIFF=$(diff component.docs.json old-component.docs.json)
+            if [ "$DIFF" != "" ]; then
+              yarn docs
+              git add docs
+              git commit -m "docs: regenerate documentation" && git push -u origin master || true
+            fi
+      - save_cache:
+          key: docs_cache
+          paths:
+            - ~/project/component.docs.json
 
 workflows:
   version: 2

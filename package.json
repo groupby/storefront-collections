@@ -31,6 +31,7 @@
     "prepush": "npm start prepush",
     "prepublish": "npm start build && npm run esnext",
     "docs": "typedoc src/**/*.ts",
+    "docs:json": "npm run docs -- --json component.docs.json",
     "release": "npm start release"
   },
   "release": {
