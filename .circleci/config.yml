@@ -53,6 +53,11 @@ jobs:
           command: |
             git config --global user.email "ops@groupbyinc.com"
             git config --global user.name "GroupBy Ops"
+            git config --global push.default simple
+
+            git remote rm origin
+            git remote add origin "https://${GH_TOKEN}@github.com/groupby/storefront-collections.git"
+
 
             yarn docs
             git add docs
