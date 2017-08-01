@@ -25,12 +25,21 @@ jobs:
           name: Update Lockfile
           command: greenkeeper-lockfile-update
       - run:
-          name: Test
-          command: yarn start ci
+          name: Build
+          command: yarn start build
       - run:
           name: Upload Lockfile
           command: greenkeeper-lockfile-upload
-          when: on_fail
+  unit_test:
+    docker:
+      - image: kkarczmarczyk/node-yarn
+    steps:
+      - checkout
+      - restore_cache:
+          <<: *cache
+      - run:
+          name: Test
+          command: yarn start ci
   release:
     docker:
       - image: kkarczmarczyk/node-yarn
@@ -53,6 +62,8 @@ jobs:
       - run:
           name: Documentation
           command: |
+            apt-get install -y diff
+
             git config --global user.email "ops@groupbyinc.com"
             git config --global user.name "GroupBy Ops"
             git config --global push.default simple
@@ -84,12 +95,15 @@ workflows:
   build_test_release:
     jobs:
       - build
+      - unit_test:
+          requires:
+            - build
       - release:
           filters:
             branches:
               only: master
           requires:
-            - build
+            - unit_test
       - documentation:
           filters:
             branches:
