@@ -7,7 +7,7 @@ jobs:
   build:
     working_directory: ~/storefront-collections
     docker:
-      - kkarczmarczyk: node-yarn
+      - image: kkarczmarczyk/node-yarn
     steps:
       - checkout
       - restore_cache:
@@ -35,7 +35,7 @@ jobs:
   release:
     working_directory: ~/storefront-collections
     docker:
-      - kkarczmarczyk: node-yarn
+      - image: kkarczmarczyk/node-yarn
     steps:
       - checkout
       - restore_cache:
@@ -46,7 +46,7 @@ jobs:
   documentation:
     working_directory: ~/storefront-collections
     docker:
-      - kkarczmarczyk: node-yarn
+      - image: kkarczmarczyk/node-yarn
     steps:
       - checkout
       - restore_cache:
