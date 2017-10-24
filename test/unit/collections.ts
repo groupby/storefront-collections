@@ -89,13 +89,13 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldHaveA
       const rawCollections = ['e', 'f'];
       const set = collections.set = spy();
       const selectCollections = collections.selectCollections = spy(() => newCollections);
-      const collectionsSelector = stub(Selectors, 'collections').returns(rawCollections);
+      const select = collections.select = spy(() => rawCollections);
       collections.flux = <any>{ store: { getState: () => state } };
 
       collections.updateCollections();
 
       expect(selectCollections).to.be.calledWith(rawCollections);
-      expect(collectionsSelector).to.be.calledWith(state);
+      expect(select).to.be.calledWith(Selectors.collections);
       expect(set).to.be.calledWith({ collections: newCollections });
     });
   });
@@ -105,13 +105,13 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldHaveA
       const allIds = ['a', 'b', 'c'];
       const set = collections.set = spy();
       const state = { j: 'k' };
-      const collectionsSelector = stub(Selectors, 'collectionIndex').returns(1);
+      const select = collections.select = spy(() => 1);
       collections.flux = <any>{ store: { getState: () => state } };
       collections.state = <any>{ collections: [{ d: 'e' }, { f: 'g' }, { h: 'i' }] };
 
       collections.updateCollectionTotal({ name: 'b', total: 50 });
 
-      expect(collectionsSelector).to.be.calledWith(state);
+      expect(select).to.be.calledWith(Selectors.collectionIndex);
       expect(set).to.be.calledWith({ collections: [{ d: 'e' }, { f: 'g', total: 50 }, { h: 'i' }] });
     });
   });
