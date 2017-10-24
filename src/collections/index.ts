@@ -23,11 +23,11 @@ class Collections {
 
   updateCollections = () =>
     this.set({
-      collections: this.selectCollections(Selectors.collections(this.flux.store.getState()))
+      collections: this.selectCollections(this.select(Selectors.collections))
     })
 
   updateCollectionTotal = ({ name, total }: Store.Collection) => {
-    const index = Selectors.collectionIndex(this.flux.store.getState(), name);
+    const index = this.select(Selectors.collectionIndex, name);
     const collections = this.state.collections.slice();
 
     collections.splice(index, 1, { ...this.state.collections[index], total });
