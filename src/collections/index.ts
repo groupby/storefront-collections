@@ -16,8 +16,8 @@ class Collections {
 
   init() {
     this.updateCollections();
-    this.flux.on(Events.COLLECTION_UPDATED, this.updateCollectionTotal);
-    this.flux.on(Events.SELECTED_COLLECTION_UPDATED, this.updateCollections);
+    this.subscribe(Events.COLLECTION_UPDATED, this.updateCollectionTotal);
+    this.subscribe(Events.SELECTED_COLLECTION_UPDATED, this.updateCollections);
     this.services.collections.register(this);
   }
 

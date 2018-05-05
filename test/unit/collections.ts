@@ -40,7 +40,7 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldHaveA
   describe('init()', () => {
     it('should call updateCollections()', () => {
       const updateCollections = collections.updateCollections = spy();
-      collections.flux = <any>{ on: () => null };
+      collections.subscribe = () => null ;
       collections.services = <any>{ collections: { register: () => null } };
 
       collections.init();
@@ -49,30 +49,28 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldHaveA
     });
 
     it('should register for COLLECTION_UPDATED event', () => {
-      const on = spy();
-      collections.flux = <any>{ on };
+      const subscribe = collections.subscribe = spy();
       collections.updateCollections = () => null;
       collections.services = <any>{ collections: { register: () => null } };
 
       collections.init();
 
-      expect(on).to.be.calledWith(Events.COLLECTION_UPDATED, collections.updateCollectionTotal);
+      expect(subscribe).to.be.calledWith(Events.COLLECTION_UPDATED, collections.updateCollectionTotal);
     });
 
     it('should register for SELECTED_COLLECTION_UPDATED event', () => {
-      const on = spy();
-      collections.flux = <any>{ on };
+      const subscribe = collections.subscribe = spy();
       collections.updateCollections = () => null;
       collections.services = <any>{ collections: { register: () => null } };
 
       collections.init();
 
-      expect(on).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED, collections.updateCollections);
+      expect(subscribe).to.be.calledWith(Events.SELECTED_COLLECTION_UPDATED, collections.updateCollections);
     });
 
     it('should register with collections service', () => {
       const register = spy();
-      collections.flux = <any>{ on: () => null };
+      collections.subscribe = () => null;
       collections.updateCollections = () => null;
       collections.services = <any>{ collections: { register } };
 
