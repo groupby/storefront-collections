@@ -1,7 +1,7 @@
 <yield>
-  <gb-select options="{ $collections.collections }" on-select="{ $collections.onSelect }">
-    <gb-custom-select>
-      <gb-collections-option></gb-collections-option>
+  <gb-select options="{ state.collections }" on-select="{ state.onSelect }">
+    <gb-custom-select _props="{ childProps() }">
+      <gb-collections-option _props="{ $option }"></gb-collections-option>
     </gb-custom-select>
   </gb-select>
 </yield>
