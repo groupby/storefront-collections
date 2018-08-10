@@ -13,7 +13,7 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldProvi
   describe('constructor()', () => {
     describe('props', () => {
       it('should have initial value', () => {
-        expect(collections.props).to.eql({ labels: {} });
+        expect(collections.props).to.eql({ labels: {}, limitCount: false });
       });
     });
 
@@ -147,6 +147,22 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldProvi
         { value: 'b', label: 'B', selected: true, total: undefined },
         { value: 'c', label: 'C', selected: false, total: undefined }
       ]);
+    });
+  });
+
+  describe('getTotal()', () => {
+    it('should return given total', () => {
+      const total = 100000;
+      collections.props.limitCount = false;
+
+      expect(collections.getTotal(total)).to.eq(total);
+    });
+
+    it('should return limited total', () => {
+      const total = 100000;
+      collections.props.limitCount = true;
+
+      expect(collections.getTotal(total)).to.eq('10000+');
     });
   });
 });

@@ -7,7 +7,8 @@ import { configurable, origin, provide, tag, Events, Selectors, Store, Tag } fro
 class Collections {
 
   props: Collections.Props = {
-    labels: {}
+    labels: {},
+    limitCount: false,
   };
   state: Collections.State = {
     collections: [],
@@ -30,7 +31,7 @@ class Collections {
     const index = this.select(Selectors.collectionIndex, name);
     const collections = this.state.collections.slice();
 
-    collections.splice(index, 1, { ...this.state.collections[index], total });
+    collections.splice(index, 1, { ...this.state.collections[index], total: this.getTotal(total) });
     this.set({ collections });
   }
 
@@ -39,15 +40,18 @@ class Collections {
       value: collection,
       label: this.props.labels[collection] || collection,
       selected: collections.selected === collection,
-      total: collections.byId[collection].total
+      total: this.getTotal(collections.byId[collection].total)
     }));
   }
+
+  getTotal = (total: number) => this.props.limitCount ? Selectors.getLimitedCountDisplay(total) : total
 }
 
 interface Collections extends Tag<Collections.Props, Collections.State> { }
 namespace Collections {
   export interface Props extends Tag.Props {
     labels: { [collection: string]: string };
+    limitCount: boolean;
   }
 
   export interface State {
@@ -59,7 +63,7 @@ namespace Collections {
     value: string;
     label: string;
     selected?: boolean;
-    total?: number;
+    total?: number | string;
   }
 }
 
