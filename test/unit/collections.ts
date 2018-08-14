@@ -160,9 +160,14 @@ suite('Collections', ({ expect, spy, stub, itShouldBeConfigurable, itShouldProvi
 
     it('should return limited total', () => {
       const total = 100000;
+      const stringTotal = '10000+';
+      const getLimitedCountDisplay = stub(Selectors, 'getLimitedCountDisplay').returns(stringTotal);
       collections.props.limitCount = true;
 
-      expect(collections.getTotal(total)).to.eq('10000+');
+      const result = collections.getTotal(total);
+
+      expect(result).to.eq(stringTotal);
+      expect(getLimitedCountDisplay).to.be.calledWithExactly(total);
     });
   });
 });
